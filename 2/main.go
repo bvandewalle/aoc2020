@@ -60,18 +60,11 @@ func part2(input []string) {
 			return r == ':' || r == '-' || r == ' '
 		})
 
-		good := false
-
 		v1, _ := strconv.Atoi(s[0])
 		v2, _ := strconv.Atoi(s[1])
-		if s[2][0] == s[3][v1-1] {
-			good = !good
-		}
-		if s[2][0] == s[3][v2-1] {
-			good = !good
-		}
 
-		if good {
+		// XOR: A!=B
+		if (s[2][0] == s[3][v1-1]) != (s[2][0] == s[3][v2-1]) {
 			count++
 		}
 	}
