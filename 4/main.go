@@ -126,17 +126,12 @@ func validate2(input map[string]string) bool {
 		},
 		"ecl": func(v string) bool {
 			p := []string{"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}
-			good := false
 			for _, pp := range p {
 				if pp == v {
-					good = true
-					break
+					return true
 				}
 			}
-			if !good {
-				return false
-			}
-			return true
+			return false
 		},
 		"pid": func(v string) bool {
 			if len(v) != 9 {
@@ -163,10 +158,7 @@ func validateInterval(low int, up int, v string) bool {
 		return false
 	}
 
-	if v1 < low {
-		return false
-	}
-	if v1 > up {
+	if v1 < low || v1 > up {
 		return false
 	}
 
