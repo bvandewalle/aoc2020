@@ -19,12 +19,25 @@ func main() {
 	scanner := bufio.NewScanner(file)
 
 	scanner.Split(bufio.ScanLines)
-	var input []string
+	var input []map[string]string
+	current := map[string]string{}
 
 	for scanner.Scan() {
 		v := scanner.Text()
-		input = append(input, v)
+
+		if v == "" {
+			input = append(input, current)
+			current = map[string]string{}
+			continue
+		}
+
+		p := strings.Split(v, " ")
+		for _, e := range p {
+			kv := strings.Split(e, ":")
+			current[kv[0]] = kv[1]
+		}
 	}
+	input = append(input, current)
 
 	file.Close()
 
@@ -32,67 +45,30 @@ func main() {
 	part2(input)
 }
 
-func part1(input []string) {
-	mem := map[string]string{}
+func part1(input []map[string]string) {
 	count := 0
 
 	for _, l := range input {
-		if l == "" {
-			if validate1(mem) {
-				count++
-			}
-			mem = map[string]string{}
-			continue
+		if validate1(l) {
+			count++
 		}
-
-		p := strings.Split(l, " ")
-		//fmt.Println(p)
-		for _, e := range p {
-			kv := strings.Split(e, ":")
-			mem[kv[0]] = kv[1]
-		}
-	}
-	// Off by one: need to validate one more time
-	if validate1(mem) {
-		count++
 	}
 
 	fmt.Println(count)
 }
 
-func part2(input []string) {
-	mem := map[string]string{}
+func part2(input []map[string]string) {
 	count := 0
 
 	for _, l := range input {
-		if l == "" {
-			fmt.Println("-----")
-
-			if validate1(mem) {
-				if validate2(mem) {
-					count++
-				}
+		if validate1(l) {
+			if validate2(l) {
+				count++
 			}
-
-			mem = map[string]string{}
-			continue
-		}
-
-		p := strings.Split(l, " ")
-		for _, e := range p {
-			kv := strings.Split(e, ":")
-			mem[kv[0]] = kv[1]
 		}
 	}
 
-	// Off by one: need to validate one more time
-	if validate1(mem) {
-		if validate2(mem) {
-			count++
-		}
-	}
-
-	fmt.Printf("final count: %d\n", count)
+	fmt.Println(count)
 }
 
 func validate1(input map[string]string) bool {
@@ -120,52 +96,21 @@ func validate1(input map[string]string) bool {
 	return true
 }
 
-func validateInterval(low int, up int, v string) bool {
-	v1, err := strconv.Atoi(v)
-	if err != nil {
-		return false
-	}
-
-	if v1 < low {
-		return false
-	}
-	if v1 > up {
-		return false
-	}
-
-	return true
-}
-
 func validate2(input map[string]string) bool {
-	for k, v := range input {
-		fmt.Println(k, v)
-
-		switch k {
-		case "byr":
-			if !validateInterval(1920, 2002, v) {
-				return false
-			}
-		case "iyr":
-			if !validateInterval(2010, 2020, v) {
-				return false
-			}
-		case "eyr":
-			if !validateInterval(2020, 2030, v) {
-				return false
-			}
-		case "hgt":
+	validatingFuncs := map[string]func(v string) bool{
+		"byr": func(v string) bool { return validateInterval(1920, 2002, v) },
+		"iyr": func(v string) bool { return validateInterval(2010, 2020, v) },
+		"eyr": func(v string) bool { return validateInterval(2020, 2030, v) },
+		"hgt": func(v string) bool {
 			if strings.Contains(v, "cm") {
-				if !validateInterval(150, 193, strings.TrimSuffix(v, "cm")) {
-					return false
-				}
+				return validateInterval(150, 193, strings.TrimSuffix(v, "cm"))
 			} else if strings.Contains(v, "in") {
-				if !validateInterval(59, 76, strings.TrimSuffix(v, "in")) {
-					return false
-				}
+				return validateInterval(59, 76, strings.TrimSuffix(v, "in"))
 			} else {
 				return false
 			}
-		case "hcl":
+		},
+		"hcl": func(v string) bool {
 			for i, c := range v {
 				if i == 0 && c != '#' {
 					return false
@@ -177,7 +122,9 @@ func validate2(input map[string]string) bool {
 					return false
 				}
 			}
-		case "ecl":
+			return true
+		},
+		"ecl": func(v string) bool {
 			p := []string{"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}
 			good := false
 			for _, pp := range p {
@@ -189,16 +136,38 @@ func validate2(input map[string]string) bool {
 			if !good {
 				return false
 			}
-
-		case "pid":
+			return true
+		},
+		"pid": func(v string) bool {
 			if len(v) != 9 {
 				return false
 			}
-			if !validateInterval(0, 999999999, v) {
+			return validateInterval(0, 999999999, v)
+		},
+	}
+
+	for k, v := range input {
+		if f, exists := validatingFuncs[k]; exists {
+			if !f(v) {
 				return false
 			}
 		}
+	}
 
+	return true
+}
+
+func validateInterval(low int, up int, v string) bool {
+	v1, err := strconv.Atoi(v)
+	if err != nil {
+		return false
+	}
+
+	if v1 < low {
+		return false
+	}
+	if v1 > up {
+		return false
 	}
 
 	return true
