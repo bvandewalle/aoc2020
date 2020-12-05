@@ -32,19 +32,15 @@ func main() {
 }
 
 func calculateID(l string) int {
-	var row float64
-	var side float64
+	var val float64
 
 	for i, c := range l {
-		if c == 'B' {
-			row += math.Exp2(6 - float64(i))
-		}
-		if c == 'R' {
-			side += math.Exp2(9 - float64(i))
+		if c == 'B' || c == 'R' {
+			val += math.Exp2(9 - float64(i))
 		}
 	}
 
-	return int(row*8 + side)
+	return int(val)
 }
 
 func part1(input []string) {
