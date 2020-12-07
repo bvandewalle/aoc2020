@@ -47,7 +47,7 @@ func part1(input []string) {
 }
 
 func part2(input []string) {
-	count := int
+	count := 0
 	currentGroupMem := map[rune]bool{}
 	currentMem := map[rune]bool{}
 	first := true
