@@ -29,6 +29,24 @@ func main() {
 	part2(input)
 }
 
+func parseInput(input []string) map[string]map[string]int {
+	mem := map[string]map[string]int{}
+
+	for _, l := range input {
+		equ := strings.Split(l, " bags contain")
+		terms := strings.Split(equ[1], ",")
+		equMem := map[string]int{}
+		for _, d := range terms {
+			e := strings.Split(d, " ")
+			i, _ := strconv.Atoi(e[1])
+			equMem[e[2]+" "+e[3]] = i
+		}
+		mem[equ[0]] = equMem
+	}
+
+	return mem
+}
+
 func recurHelper1(mem map[string]bool, data map[string]map[string]int, current string) {
 	for k, v := range data {
 		for k2 := range v {
@@ -44,19 +62,7 @@ func recurHelper1(mem map[string]bool, data map[string]map[string]int, current s
 }
 
 func part1(input []string) {
-	mem := map[string]map[string]int{}
-
-	for _, l := range input {
-		equ := strings.Split(l, " bags contain")
-		terms := strings.Split(equ[1], ",")
-		equMem := map[string]int{}
-		for _, d := range terms {
-			e := strings.Split(d, " ")
-			i, _ := strconv.Atoi(e[1])
-			equMem[e[2]+" "+e[3]] = i
-		}
-		mem[equ[0]] = equMem
-	}
+	mem := parseInput(input)
 
 	memHold := map[string]bool{
 		"shiny gold": true,
@@ -78,19 +84,7 @@ func recurHelper2(data map[string]map[string]int, current string) int {
 }
 
 func part2(input []string) {
-	mem := map[string]map[string]int{}
-
-	for _, l := range input {
-		equ := strings.Split(l, " bags contain")
-		terms := strings.Split(equ[1], ",")
-		equMem := map[string]int{}
-		for _, d := range terms {
-			e := strings.Split(d, " ")
-			i, _ := strconv.Atoi(e[1])
-			equMem[e[2]+" "+e[3]] = i
-		}
-		mem[equ[0]] = equMem
-	}
+	mem := parseInput(input)
 
 	solution := recurHelper2(mem, "shiny gold")
 
