@@ -73,11 +73,16 @@ func part1(input []string) {
 	fmt.Println(len(memHold) - 1)
 }
 
-func recurHelper2(data map[string]map[string]int, current string) int {
+// optimized version using an accumulator to avoid redoing calculations
+func recurHelper2(mem map[string]int, data map[string]map[string]int, current string) int {
 	count := 1
 
 	for k, v := range data[current] {
-		count += v * recurHelper2(data, k)
+		if _, exists := mem[k]; !exists {
+			mem[k] = recurHelper2(mem, data, k)
+		}
+
+		count += v * mem[k]
 	}
 
 	return count
@@ -86,7 +91,7 @@ func recurHelper2(data map[string]map[string]int, current string) int {
 func part2(input []string) {
 	mem := parseInput(input)
 
-	solution := recurHelper2(mem, "shiny gold")
+	solution := recurHelper2(map[string]int{}, mem, "shiny gold")
 
 	fmt.Println(solution - 1)
 }
