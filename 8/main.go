@@ -78,8 +78,8 @@ func part1(input []string) {
 func part2(input []string) {
 	for i, l := range input {
 		if strings.Contains(l, "nop") || strings.Contains(l, "jmp") {
-			finished, val := runProgram(input, i)
-			if !finished {
+			looped, val := runProgram(input, i)
+			if !looped {
 				fmt.Println(val)
 				return
 			}
