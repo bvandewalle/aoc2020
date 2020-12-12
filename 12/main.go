@@ -17,55 +17,11 @@ func main() {
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
 
-	//var input []int
-	//for scanner.Scan() {
-	//	v := scanner.Text()
-	//	in, _ := strconv.Atoi(v)
-	//	input = append(input, in)
-	//}
-
-	//[][]INT
-	// var input [][]int
-	// for scanner.Scan() {
-	// 	line := []int{}
-	// 	v := scanner.Text()
-	//
-	// 	p := strings.Split(v, " ")
-	// 	for _, e := range p {
-	// 		in, _ := strconv.Atoi(e)
-	// 		line = append(line, in)
-	// 	}
-	//
-	// 	input = append(input, line)
-	// }
-
-	//[]STRINGS:
 	var input []string
 	for scanner.Scan() {
 		v := scanner.Text()
 		input = append(input, v)
 	}
-
-	// []MAP[STRINGS]STRING
-	//var input []map[string]string
-	//current := map[string]string{}
-	//
-	//for scanner.Scan() {
-	//	v := scanner.Text()
-	//
-	//	if v == "" {
-	//		input = append(input, current)
-	//		current = map[string]string{}
-	//		continue
-	//	}
-	//
-	//	p := strings.Split(v, " ")
-	//	for _, e := range p {
-	//		kv := strings.Split(e, ":")
-	//		current[kv[0]] = kv[1]
-	//	}
-	//}
-	//input = append(input, current)
 
 	file.Close()
 
