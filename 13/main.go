@@ -119,7 +119,46 @@ func part2stupid2(input []string) {
 	}
 }
 
+func inv(a int, m int) int {
+	m0 := m
+	var t, q int
+	x0 := 0
+	x1 := 1
+
+	if m == 1 {
+		return 0
+	}
+
+	// Apply extended Euclid Algorithm
+	for a > 1 {
+		// q is quotient
+		q = a / m
+
+		t = m
+
+		// m is remainder now, process
+		// same as euclid's algo
+		m = a % m
+		a = t
+
+		t = x0
+
+		x0 = x1 - q*x0
+
+		x1 = t
+	}
+
+	// Make x1 positive
+	if x1 < 0 {
+		x1 += m0
+	}
+
+	return x1
+}
+
+// After googling a lot, I recognized this is the chinese reminder theorem!
 func part2(input []string) {
+	mem := map[int]int{}
 	listInts := []int{}
 	busses := strings.Split(input[1], ",")
 
@@ -129,31 +168,24 @@ func part2(input []string) {
 		}
 
 		bInt, _ := strconv.Atoi(b)
-		listInts = append(listInts, bInt-i)
+		mem[bInt] = bInt - i
+		listInts = append(listInts, bInt)
 	}
-	sort.Ints(listInts)
 
+	fmt.Println(mem)
 	fmt.Println(listInts)
 
-	idToCheck := listInts[len(listInts)-1]
-	currentTime := 0
-	offset := mem[idToCheck]
-
-	fmt.Println(idToCheck)
-	fmt.Println(offset)
-	for {
-		currentTime += idToCheck
-		//fmt.Println(currentTime)
-
-		for i := (len(listInts) - 2); i >= 0; i-- {
-			if ((currentTime - offset + mem[listInts[i]]) % listInts[i]) != 0 {
-				break
-			}
-
-			if i == 0 {
-				fmt.Println(currentTime - offset)
-				return
-			}
-		}
+	prod := 1
+	for _, n := range listInts {
+		prod *= n
 	}
+	fmt.Println(prod)
+
+	result := 0
+	for k, v := range mem {
+		pp := prod / k
+		result += v * pp * inv(pp, k)
+	}
+
+	fmt.Println(result % prod)
 }
