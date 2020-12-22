@@ -65,11 +65,11 @@ func part1(input []string) {
 		n2, _ := strconv.Atoi(n[1])
 		n3 := (int64(n2) | ones) &^ zeroes
 
-		fmt.Printf("-----\n")
-		fmt.Printf("ones\t%36b\n", ones)
-		fmt.Printf("zeroes\t%36b\n", zeroes)
-		fmt.Printf("origi\t%36b\n", n2)
-		fmt.Printf("result\t%36b\n", n3)
+		//fmt.Printf("-----\n")
+		//fmt.Printf("ones\t%36b\n", ones)
+		//fmt.Printf("zeroes\t%36b\n", zeroes)
+		//fmt.Printf("origi\t%36b\n", n2)
+		//fmt.Printf("result\t%36b\n", n3)
 
 		mem[int64(n1)] = n3
 	}
@@ -82,11 +82,20 @@ func part1(input []string) {
 	fmt.Println(sum)
 }
 
-func generateAllAddresses(address int64, x int64) []int64 {
+func generateAllAddresses(address int64, m, x int64) []int64 {
+	address = address | m
+
 	generated := []int64{address}
 
 	for i := 0; i < 64; i++ {
-
+		pos := int64((1 << i))
+		if (x & pos) == pos {
+			newGenerated := []int64{}
+			for _, a := range generated {
+				newGenerated = append(newGenerated, a|pos, a&^pos)
+			}
+			generated = newGenerated
+		}
 	}
 
 	return generated
@@ -123,13 +132,13 @@ func part2(input []string) {
 
 		n := strings.Split(strings.TrimPrefix(l, "mem["), "] = ")
 		//fmt.Println(n)
-		n1, _ := strconv.Atoi(n[0])
-		n0 := (int64(n1) | mask)
-		n2, _ := strconv.Atoi(n[1])
+		part1, _ := strconv.Atoi(n[0])
+		part2, _ := strconv.Atoi(n[1])
 
-		allAddresses := generateAllAddresses(n0, x)
+		allAddresses := generateAllAddresses(int64(part1), m, x)
+		fmt.Println(allAddresses)
 		for _, a := range allAddresses {
-			mem[a] = n2
+			mem[a] = int64(part2)
 		}
 	}
 
