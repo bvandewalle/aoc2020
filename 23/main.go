@@ -82,8 +82,8 @@ func part1(input []int) {
 		destination.next, selected.next.next.next = selected, destination.next
 		current = current.next
 	}
-	pr := first
-	for i := 1; i < 10; i++ {
+	pr := mem[1].next
+	for i := 1; i < 9; i++ {
 		fmt.Printf("%d", pr.val)
 		pr = pr.next
 	}
@@ -134,10 +134,8 @@ func part2(input []int) {
 	one := mem[1]
 	result := 1
 	for i := 1; i <= 3; i++ {
-		fmt.Printf("%d \n", one.val)
 		result *= one.val
 		one = one.next
-
 	}
 
 	fmt.Println(result)

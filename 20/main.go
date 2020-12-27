@@ -26,7 +26,7 @@ func main() {
 
 	file.Close()
 
-	//part1(input)
+	part1(input)
 	part2(input)
 }
 

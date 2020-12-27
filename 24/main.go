@@ -49,8 +49,6 @@ func part1(input []string) {
 				} else if i+1 < len(l) && l[i+1] == 'w' {
 					lineInput = append(lineInput, 2)
 					i++
-				} else {
-					fmt.Println("ISSUE S")
 				}
 			} else if l[i] == 'n' {
 				if i+1 < len(l) && l[i+1] == 'e' {
@@ -59,15 +57,11 @@ func part1(input []string) {
 				} else if i+1 < len(l) && l[i+1] == 'w' {
 					lineInput = append(lineInput, 4)
 					i++
-				} else {
-					fmt.Println("ISSUE W")
 				}
 			} else if l[i] == 'e' {
 				lineInput = append(lineInput, 0)
 			} else if l[i] == 'w' {
 				lineInput = append(lineInput, 3)
-			} else {
-				fmt.Println("ISSUE nOTHING")
 			}
 		}
 		instructions = append(instructions, lineInput)
@@ -82,7 +76,6 @@ func part1(input []string) {
 			x += moveX[m]
 			y += moveY[m]
 		}
-		fmt.Println(x, y)
 
 		p := point{
 			x: x,
@@ -121,8 +114,6 @@ func part2(input []string) {
 				} else if i+1 < len(l) && l[i+1] == 'w' {
 					lineInput = append(lineInput, 2)
 					i++
-				} else {
-					fmt.Println("ISSUE S")
 				}
 			} else if l[i] == 'n' {
 				if i+1 < len(l) && l[i+1] == 'e' {
@@ -131,15 +122,11 @@ func part2(input []string) {
 				} else if i+1 < len(l) && l[i+1] == 'w' {
 					lineInput = append(lineInput, 4)
 					i++
-				} else {
-					fmt.Println("ISSUE W")
 				}
 			} else if l[i] == 'e' {
 				lineInput = append(lineInput, 0)
 			} else if l[i] == 'w' {
 				lineInput = append(lineInput, 3)
-			} else {
-				fmt.Println("ISSUE nOTHING")
 			}
 		}
 		instructions = append(instructions, lineInput)
