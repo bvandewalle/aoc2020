@@ -30,21 +30,50 @@ func main() {
 	part2(input)
 }
 
-func evaluateHelper(l string, puzzle map[int][][]int, currentRule int) (int, bool) {
+func evaluateHelper(l string, puzzle map[int][][]int, currentRule []int) bool {
+	if len(currentRule) == 0 && len(l) == 0 {
+		return true
+	}
 
-}
+	if len(currentRule) == 0 || len(l) == 0 {
+		return false
+	}
 
-func evaluate(l string, puzzle map[int][][]int, currentRule []int) (bool, int) {
-	success := false
+	toEvaluate := currentRule[0]
 
-	for _, id := range currentRule {
-		if id >= 0 {
-
+	for _, possibility := range puzzle[toEvaluate] {
+		switch possibility[0] {
+		case -1:
+			if l[0] == 'a' {
+				if evaluateHelper(l[1:], puzzle, currentRule[1:]) {
+					return true
+				}
+			}
+		case -2:
+			if l[0] == 'b' {
+				if evaluateHelper(l[1:], puzzle, currentRule[1:]) {
+					return true
+				}
+			}
+		default:
+			if evaluateHelper(l, puzzle, append(possibility, currentRule[1:]...)) {
+				return true
+			}
 		}
 	}
+
+	return false
 }
 
 func part1(input []string) {
+	part1and2(input, false)
+}
+
+func part2(input []string) {
+	part1and2(input, true)
+}
+
+func part1and2(input []string, part2 bool) {
 	mem := map[int][][]int{}
 
 	i := 0
@@ -79,20 +108,20 @@ func part1(input []string) {
 		mem[id] = entry
 	}
 
+	if part2 {
+		mem[8] = [][]int{[]int{42}, []int{42, 8}}
+		mem[11] = [][]int{[]int{42, 31}, []int{42, 11, 31}}
+	}
+
 	count := 0
 
 	for i < len(input) {
-		if evaluate(input[i], mem) {
+		if evaluateHelper(input[i], mem, []int{0}) {
 			count++
 		}
 
 		i++
 	}
 
-	fmt.Println(mem)
 	fmt.Println(count)
-}
-
-func part2(input []string) {
-
 }
